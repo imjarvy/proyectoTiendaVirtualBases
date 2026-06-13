@@ -1,0 +1,30 @@
+{
+  "name": "tienda-virtual-mongodb",
+  "version": "1.0.0",
+  "description": "Tienda virtual escalable con Node.js, Express y MongoDB 4.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed:categorias": "node scripts/categorias-seed.js",
+    "seed:usuarios": "node scripts/usuarios-seed.js",
+    "seed:productos": "node scripts/productos-seed.js",
+    "seed:pedidos": "node scripts/pedidos-seed.js"
+  },
+  "keywords": ["mongodb", "express", "nodejs", "tienda-virtual", "nosql"],
+  "author": "Universidad de Caldas — Ingeniería de Sistemas",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
