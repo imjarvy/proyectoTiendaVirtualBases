@@ -1,0 +1,324 @@
+{
+  "info": {
+    "name": "Tienda Virtual — MongoDB API",
+    "description": "Colección de pruebas para la API REST de tienda virtual. Universidad de Caldas — Bases de Datos No Relacionales.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",      "value": "http://localhost:3000" },
+    { "key": "categoria_id",  "value": "" },
+    { "key": "user_id",       "value": "" },
+    { "key": "producto_id_1", "value": "" },
+    { "key": "producto_id_2", "value": "" },
+    { "key": "pedido_id",     "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. POST /api/categorias",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/categorias", "host": ["{{base_url}}"], "path": ["api", "categorias"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Electronica\",\n  \"descripcion\": \"Dispositivos electronicos, gadgets y accesorios tecnologicos\",\n  \"slug\": \"electronica\",\n  \"imagen_url\": \"https://cdn.tienda.com/categorias/electronica.jpg\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 201', () => pm.response.to.have.status(201));",
+          "pm.test('success true', () => pm.expect(pm.response.json().success).to.be.true);",
+          "pm.test('tiene _id', () => pm.expect(pm.response.json().data._id).to.exist);",
+          "pm.collectionVariables.set('categoria_id', pm.response.json().data._id);",
+          "console.log('categoria_id:', pm.response.json().data._id);"
+        ]}
+      }]
+    },
+    {
+      "name": "2. POST /api/productos (producto 1)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/productos", "host": ["{{base_url}}"], "path": ["api", "productos"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laptop Lenovo IdeaPad 3 15ITL6\",\n  \"descripcion\": \"Portatil Intel Core i5, 8GB RAM, SSD 512GB\",\n  \"precio\": 2450000,\n  \"sku\": \"LEN-IDEA3-I5-512\",\n  \"categoria_id\": \"{{categoria_id}}\",\n  \"imagenes\": [\"https://cdn.tienda.com/productos/lenovo-1.jpg\"],\n  \"stock\": 50\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 201', () => pm.response.to.have.status(201));",
+          "pm.test('success true', () => pm.expect(pm.response.json().success).to.be.true);",
+          "pm.test('sku correcto', () => pm.expect(pm.response.json().data.sku).to.eql('LEN-IDEA3-I5-512'));",
+          "pm.collectionVariables.set('producto_id_1', pm.response.json().data._id);",
+          "console.log('producto_id_1:', pm.response.json().data._id);"
+        ]}
+      }]
+    },
+    {
+      "name": "3. POST /api/productos (producto 2)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/productos", "host": ["{{base_url}}"], "path": ["api", "productos"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Mouse Inalambrico Logitech M185\",\n  \"descripcion\": \"Mouse inalambrico receptor USB nano, hasta 12 meses de bateria\",\n  \"precio\": 85000,\n  \"sku\": \"LOG-M185-GRY\",\n  \"categoria_id\": \"{{categoria_id}}\",\n  \"imagenes\": [\"https://cdn.tienda.com/productos/logitech-m185.jpg\"],\n  \"stock\": 200\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 201', () => pm.response.to.have.status(201));",
+          "pm.collectionVariables.set('producto_id_2', pm.response.json().data._id);",
+          "console.log('producto_id_2:', pm.response.json().data._id);"
+        ]}
+      }]
+    },
+    {
+      "name": "4. POST /api/usuarios",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Valentina Rios\",\n  \"email\": \"valentina.rios@gmail.com\",\n  \"password_hash\": \"Clave1234!\",\n  \"telefono\": \"+57 310 456 7890\",\n  \"direccion\": {\n    \"calle\": \"Carrera 15 # 93-47 Apto 302\",\n    \"ciudad\": \"Bogota\",\n    \"departamento\": \"Cundinamarca\",\n    \"pais\": \"Colombia\",\n    \"cp\": \"110221\"\n  }\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 201', () => pm.response.to.have.status(201));",
+          "pm.test('success true', () => pm.expect(pm.response.json().success).to.be.true);",
+          "pm.test('no expone password', () => pm.expect(pm.response.json().data.password_hash).to.be.undefined);",
+          "pm.test('direccion embebida', () => pm.expect(pm.response.json().data.direccion).to.exist);",
+          "pm.collectionVariables.set('user_id', pm.response.json().data._id);",
+          "console.log('user_id:', pm.response.json().data._id);"
+        ]}
+      }]
+    },
+    {
+      "name": "5. POST /api/pedidos",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/pedidos", "host": ["{{base_url}}"], "path": ["api", "pedidos"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario_id\": \"{{user_id}}\",\n  \"productos\": [\n    { \"producto_id\": \"{{producto_id_1}}\", \"cantidad\": 1 },\n    { \"producto_id\": \"{{producto_id_2}}\", \"cantidad\": 2 }\n  ],\n  \"metodo_pago\": \"tarjeta_credito\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 201', () => pm.response.to.have.status(201));",
+          "pm.test('success true', () => pm.expect(pm.response.json().success).to.be.true);",
+          "pm.test('tiene numero_pedido', () => pm.expect(pm.response.json().data.numero_pedido).to.exist);",
+          "pm.test('tiene 2 productos', () => pm.expect(pm.response.json().data.productos).to.have.lengthOf(2));",
+          "pm.test('total correcto', () => {",
+          "  const d = pm.response.json().data;",
+          "  pm.expect(d.total).to.eql(d.productos.reduce((a, p) => a + p.subtotal, 0));",
+          "});",
+          "pm.test('estado pendiente', () => pm.expect(pm.response.json().data.estado).to.eql('pendiente'));",
+          "pm.collectionVariables.set('pedido_id', pm.response.json().data._id);",
+          "console.log('pedido_id:', pm.response.json().data._id);"
+        ]}
+      }]
+    },
+    {
+      "name": "6. GET /api/productos (con filtros)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/productos?categoria={{categoria_id}}&precioMin=10000&precioMax=500000&page=1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "productos"],
+          "query": [
+            { "key": "categoria", "value": "{{categoria_id}}" },
+            { "key": "precioMin", "value": "10000" },
+            { "key": "precioMax", "value": "500000" },
+            { "key": "page",      "value": "1" }
+          ]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('success true', () => pm.expect(pm.response.json().success).to.be.true);",
+          "pm.test('tiene paginacion', () => pm.expect(pm.response.json().paginacion).to.exist);",
+          "pm.test('data es array', () => pm.expect(pm.response.json().data).to.be.an('array'));",
+          "pm.test('precios en rango', () => {",
+          "  pm.response.json().data.forEach(p => {",
+          "    pm.expect(p.precio).to.be.at.least(10000);",
+          "    pm.expect(p.precio).to.be.at.most(500000);",
+          "  });",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "7. GET /api/usuarios/:id",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/usuarios/{{user_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "usuarios", "{{user_id}}"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('no expone password', () => pm.expect(pm.response.json().data.password_hash).to.be.undefined);",
+          "pm.test('tiene ultimos_pedidos', () => pm.expect(pm.response.json().data.ultimos_pedidos).to.be.an('array'));",
+          "pm.test('direccion presente', () => pm.expect(pm.response.json().data.direccion.ciudad).to.exist);"
+        ]}
+      }]
+    },
+    {
+      "name": "8. GET /api/usuarios/:id/pedidos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/usuarios/{{user_id}}/pedidos",
+          "host": ["{{base_url}}"],
+          "path": ["api", "usuarios", "{{user_id}}", "pedidos"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('tiene usuario', () => pm.expect(pm.response.json().data.usuario).to.exist);",
+          "pm.test('tiene pedidos', () => pm.expect(pm.response.json().data.pedidos).to.be.an('array'));",
+          "pm.test('al menos 1 pedido', () => pm.expect(pm.response.json().data.pedidos.length).to.be.at.least(1));"
+        ]}
+      }]
+    },
+    {
+      "name": "9. PUT /api/pedidos/:id/estado",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/api/pedidos/{{pedido_id}}/estado",
+          "host": ["{{base_url}}"],
+          "path": ["api", "pedidos", "{{pedido_id}}", "estado"]
+        },
+        "body": { "mode": "raw", "raw": "{\n  \"estado\": \"enviado\"\n}" }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('estado actualizado a enviado', () => pm.expect(pm.response.json().data.estado).to.eql('enviado'));"
+        ]}
+      }]
+    },
+    {
+      "name": "10. GET /api/inventario/bajo-stock",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/inventario/bajo-stock?umbral=10",
+          "host": ["{{base_url}}"],
+          "path": ["api", "inventario", "bajo-stock"],
+          "query": [{ "key": "umbral", "value": "10" }]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('data es array', () => pm.expect(pm.response.json().data).to.be.an('array'));",
+          "pm.test('stock <= 10 en todos', () => {",
+          "  pm.response.json().data.forEach(i => pm.expect(i.cantidad).to.be.at.most(10));",
+          "});"
+        ]}
+      }]
+    },
+    {
+      "name": "11. PUT /api/inventario/:producto_id",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/api/inventario/{{producto_id_1}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "inventario", "{{producto_id_1}}"]
+        },
+        "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"entrada\",\n  \"cantidad\": 100,\n  \"motivo\": \"Reposicion de proveedor\"\n}" }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('cantidad es numero', () => pm.expect(pm.response.json().data.cantidad).to.be.a('number'));"
+        ]}
+      }]
+    },
+    {
+      "name": "12. DELETE /api/usuarios/:id",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{base_url}}/api/usuarios/{{user_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "usuarios", "{{user_id}}"]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 200', () => pm.response.to.have.status(200));",
+          "pm.test('activo es false', () => pm.expect(pm.response.json().data.activo).to.be.false);",
+          "pm.test('documento sigue existiendo', () => pm.expect(pm.response.json().data._id).to.exist);"
+        ]}
+      }]
+    },
+    {
+      "name": "13. ERROR — stock insuficiente",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/pedidos", "host": ["{{base_url}}"], "path": ["api", "pedidos"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuario_id\": \"{{user_id}}\",\n  \"productos\": [{ \"producto_id\": \"{{producto_id_1}}\", \"cantidad\": 999999 }],\n  \"metodo_pago\": \"pse\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 400', () => pm.response.to.have.status(400));",
+          "pm.test('success false', () => pm.expect(pm.response.json().success).to.be.false);",
+          "pm.test('mensaje stock insuficiente', () => pm.expect(pm.response.json().message).to.include('Stock insuficiente'));"
+        ]}
+      }]
+    },
+    {
+      "name": "14. ERROR — email duplicado",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Otro Usuario\",\n  \"email\": \"valentina.rios@gmail.com\",\n  \"password_hash\": \"Clave5678!\",\n  \"direccion\": { \"calle\": \"Calle 10\", \"ciudad\": \"Cali\", \"pais\": \"Colombia\" }\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": { "exec": [
+          "pm.test('Status 409', () => pm.response.to.have.status(409));",
+          "pm.test('success false', () => pm.expect(pm.response.json().success).to.be.false);"
+        ]}
+      }]
+    }
+  ]
+}
