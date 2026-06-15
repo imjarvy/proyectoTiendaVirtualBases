@@ -27,6 +27,7 @@ cd tienda-virtual
 
 # 2. Instalar dependencias
 npm install
+npm install --save-dev @faker-js/faker
 
 # 3. Configurar variables de entorno
 cp .env.example .env

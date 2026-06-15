@@ -11,7 +11,13 @@
     "seed:productos": "node scripts/productos-seed.js",
     "seed:pedidos": "node scripts/pedidos-seed.js"
   },
-  "keywords": ["mongodb", "express", "nodejs", "tienda-virtual", "nosql"],
+  "keywords": [
+    "mongodb",
+    "express",
+    "nodejs",
+    "tienda-virtual",
+    "nosql"
+  ],
   "author": "Universidad de Caldas — Ingeniería de Sistemas",
   "license": "MIT",
   "dependencies": {
@@ -22,6 +28,7 @@
     "mongoose": "^7.6.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
     "nodemon": "^3.0.1"
   },
   "engines": {
