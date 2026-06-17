@@ -43,6 +43,7 @@ app.get('/health', (req, res) => {
 });
 
 // app.use('/api/categorias',  require('./src/routes/categorias'));
+app.use('/api/categorias',  require('./src/routes/categorias'));
 app.use('/api/usuarios',    require('./src/routes/usuarios'));
 app.use('/api/productos',   require('./src/routes/productos'));
 app.use('/api/pedidos',     require('./src/routes/pedidos'));
